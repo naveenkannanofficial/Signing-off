@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Signing Off — My Last Day at NYL</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>😊</text></svg>" />
 <style>
   :root {
     --bg: #000000;
@@ -461,6 +462,43 @@
     10% { opacity: 0.9; }
     100% { opacity: 0; transform: translateY(-110vh) scale(1.1); }
   }
+
+  /* ===== Mobile responsiveness ===== */
+  @media (max-width: 768px) {
+    section { padding: 60px 18px; }
+    .hero { padding: 20px 16px; }
+    .message-box { padding: 28px 22px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+    .card { padding: 24px 16px; }
+    .connect-grid { grid-template-columns: 1fr; gap: 16px; }
+    .sign-name { gap: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { line-height: 1.2; }
+    .hero .tag { letter-spacing: 4px; font-size: 12px; }
+    .hero p { font-size: 15px; }
+    .scroll-hint { margin-top: 40px; }
+    section { padding: 50px 16px; }
+    .section-title { font-size: 26px; }
+    .section-sub { font-size: 15px; margin-bottom: 36px; }
+    .message-box { padding: 24px 18px; font-size: 16px; line-height: 1.7; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .card { padding: 20px 12px; }
+    .avatar { width: 60px; height: 60px; font-size: 22px; }
+    .card h3 { font-size: 17px; }
+    .card .role { font-size: 12px; }
+    .card .tap { font-size: 10px; }
+    .popup { padding: 32px 22px; }
+    .popup .note { font-size: 16px; }
+    .connect-value { font-size: 13px; }
+    footer { padding: 50px 18px 70px; }
+    .signature { font-size: 22px; }
+  }
+
+  @media (max-width: 360px) {
+    .grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -568,14 +606,17 @@
      note  : the personal message that will make them smile
   ========================================================= */
   const team = [
-    { name: "Alex", role: "The Mentor", emoji: "🧠", note: "You taught me more than any manual ever could. Thank you for your patience and wisdom!" },
-    { name: "Priya", role: "The Problem Solver", emoji: "💡", note: "No bug stood a chance around you. Working beside you was pure inspiration!" },
-    { name: "Sam", role: "The Motivator", emoji: "🔥", note: "Your energy lit up every Monday. Thanks for keeping the whole team smiling!" },
-    { name: "Maria", role: "The Rock", emoji: "🛡️", note: "Calm under any pressure. You made hard days feel easy. Forever grateful!" },
-    { name: "John", role: "The Idea Machine", emoji: "🚀", note: "Every brainstorm with you turned into magic. Keep dreaming big!" },
-    { name: "Lena", role: "The Sunshine", emoji: "🌞", note: "Your kindness made this office feel like home. Thank you for every smile!" },
-    { name: "David", role: "The Wizard", emoji: "🪄", note: "You made the impossible look effortless. It was an honor to learn from you!" },
-    { name: "Aisha", role: "The Heart", emoji: "💖", note: "You cared about people first, always. That made all the difference. Thank you!" }
+    { name: "Magesh", role: "My Leader & Guiding Light", emoji: "🧭", note: "You didn't just lead — you guided me with patience, wisdom, and heart. Every bit of growth I carry forward has your fingerprints on it. Thank you for believing in me and showing me the right way. A true leader in every sense! 🙏" },
+    { name: "Amy", role: "My Biggest Cheerleader", emoji: "🌟", note: "Your appreciation lifted me on days I needed it most. You noticed the little things, recognized my efforts, and that recognition fueled me to give my best every single time. Thank you for seeing me and cheering me on — it meant the world! 💫" },
+    { name: "Nirmal", role: "My First Scrum Master", emoji: "🏅", note: "You were my very first Scrum Master, and you set the bar high! You taught me the rhythm of the team — the stand-ups, the sprints, the spirit of collaboration. Thank you for laying such a strong foundation and making agile feel effortless. I'll always remember where it all began! 🚀" },
+    { name: "Sathish", role: "A Leader Who Noticed", emoji: "👏", note: "Even though our paths didn't cross too often, you still took the time to notice and recognize my work — and that quiet appreciation spoke volumes. Thank you for being the kind of leader who sees the effort even from a distance. It truly meant a lot to me! 🙌" },
+    { name: "Mahaboob", role: "The Master of Patience", emoji: "🧘", note: "Lead Engineer by title, but a teacher of patience by heart. Watching you stay calm and composed in every situation taught me a lesson no book ever could — that true strength is staying steady when things get tough. Thank you for showing me how a person should carry patience in every moment. That lesson stays with me forever! 🌿" },
+    { name: "Venkat", role: "The Architect Who Believed First", emoji: "🏛️", note: "You were the very first to believe in me — from that interview itself, you saw my potential and showed such genuine warmth and gratitude. As an architect, you didn't just design systems, you helped shape my journey by encouraging me every step of the way. Thank you for opening the door and having faith in me from day one! 🙏" },
+    { name: "Eric", role: "The Gentleman of Perfect Words", emoji: "🎙️", note: "A Product Owner with a gentle soul and a heart full of gratitude. I'm honestly a fan of the way you speak — every word so perfectly chosen and beautifully pronounced. You made even simple conversations feel classy and inspiring. Thank you for your kindness, your grace, and for being such a wonderful role model. 🌟" },
+    { name: "Ayush", role: "My API Partner-in-Crime", emoji: "🤝", note: "So many stories, so many sprints — and we tackled them all together! Working side by side with you on the APIs was an absolute joy. We debugged, we built, we shipped, and we made a great team doing it. Thank you for the awesome collaboration, buddy. It truly would've been great to keep working with you! 💻🚀" },
+    { name: "Bhavya", role: "The Bug Hunter with Heart", emoji: "🔍", note: "A brilliant tester and an even better friend! Beyond catching every bug, you always had such a warm and genuine connect with me. Our conversations, the smooth handoffs, the shared laughs — it all made work so much more enjoyable. Thank you for keeping our quality high and our spirits higher. I'll miss our connect! 💖" },
+    { name: "Vignesh", role: "The Genuine Go-To Senior", emoji: "🧑‍💻", note: "Whenever I needed to understand a tricky piece of code or get a PR approved, you were my go-to person — always approachable, always helpful. Such a genuine and down-to-earth guy! Your guidance made complex things simple and your reviews made me a better developer. Thank you for always being there with patience and a smile. 🙌" },
+    { name: "Arul", role: "A Friend Since Day One", emoji: "🤗", note: "A wonderful tester and one of my earliest friends here — you were with me right from the starting stage of this journey. We grew together, learned together, and shared so many good moments. You're such a genuine friend, and honestly, I'm going to miss you a lot. Thank you for being by my side from the very beginning! 💙" }
   ];
 
   const grid = document.getElementById("cardGrid");

@@ -1,25 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
-    <style>
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        font-family: Arial, sans-serif;
-        background: #f3f4f6;
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Signing Off — My Last Day at NYL</title>
+<style>
+  :root {
+    --bg: #000000;
+    --text: #ffffff;
+    --muted: #b3b3b3;
+    --accent: #00c2ff;
+    --accent2: #ff5ca2;
+    --card: #0e0e0e;
+    --border: rgba(255, 255, 255, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* ===== Animated starfield background ===== */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .stars {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(2px 2px at 70% 60%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 90% 20%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 10% 70%, rgba(255,255,255,0.5), transparent);
+    background-size: 800px 800px;
+    animation: drift 90s linear infinite;
+    opacity: 0.45;
+    will-change: transform;
+  }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-400px, -400px, 0); }
+  }
+
+  /* Glowing gradient blobs */
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.3;
+    z-index: 0;
+    pointer-events: none;
+    transform: translateZ(0);
+  }
+  .glow.one { width: 480px; height: 480px; background: var(--accent); top: -120px; left: -120px; }
+  .glow.two { width: 420px; height: 420px; background: var(--accent2); bottom: -140px; right: -120px; }
+
+  .wrap { position: relative; z-index: 1; }
+
+  /* ===== Hero ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+  }
+  .hero .tag {
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 18px;
+    animation: fadeUp 1s ease both;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 9vw, 110px);
+    font-weight: 800;
+    line-height: 1.15;
+    padding-bottom: 0.12em;
+    background: linear-gradient(90deg, #ffffff, #9ad9ff, #ff9ecb, #ffffff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 6s linear infinite, fadeUp 1.1s ease both;
+  }
+  @keyframes shine { to { background-position: 300% 0; } }
+  .hero-name {
+    margin-top: 20px;
+    font-size: clamp(22px, 4.5vw, 40px);
+    font-weight: 900;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #00c2ff, #ff5ca2, #9ad9ff, #00c2ff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite, fadeUp 1.2s ease both;
+    text-shadow: 0 0 30px rgba(0,194,255,0.15);
+  }
+  .hero-name::before { content: "— "; }
+  .hero p {
+    max-width: 620px;
+    color: var(--muted);
+    margin-top: 22px;
+    font-size: clamp(16px, 2.4vw, 20px);
+    animation: fadeUp 1.3s ease both;
+  }
+  .scroll-hint {
+    margin-top: 60px;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 2px;
+    animation: bob 2s ease-in-out infinite;
+  }
+  .scroll-hint span { display: block; font-size: 22px; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+  /* ===== Sections ===== */
+  section { padding: 90px 24px; max-width: 1100px; margin: 0 auto; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
+
+  /* staggered zoom-in for cards */
+  .card {
+    opacity: 0;
+    transform: scale(0.7) translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  .card.pop { opacity: 1; transform: scale(1) translateY(0); }
+
+  .section-title {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--muted);
+    max-width: 640px;
+    margin: 0 auto 50px;
+    font-size: 17px;
+  }
+
+  .message-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    font-size: clamp(17px, 2.6vw, 22px);
+    line-height: 1.9;
+    text-align: center;
+  }
+  .message-box strong { color: var(--accent); }
+
+  /* ===== Cards grid ===== */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 22px;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s ease, border-color 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,194,255,0.12), rgba(255,92,162,0.12));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255,255,255,0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(0,194,255,0.15);
+  }
+  .card:hover::before { opacity: 1; }
+  .avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    position: relative;
+    z-index: 1;
+  }
+  .card h3 { font-size: 20px; position: relative; z-index: 1; }
+  .card .role { color: var(--muted); font-size: 14px; margin-top: 4px; position: relative; z-index: 1; }
+  .card .tap {
+    margin-top: 14px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== Popup ===== */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 50;
+  }
+  .overlay.open { opacity: 1; visibility: visible; }
+  .popup {
+    background: #0c0c0c;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    max-width: 440px;
+    width: 100%;
+    padding: 40px 34px;
+    text-align: center;
+    transform: scale(0.85) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,92,162,0.15);
+  }
+  .overlay.open .popup { transform: scale(1) translateY(0); }
+  .popup .avatar { width: 90px; height: 90px; font-size: 34px; margin-bottom: 18px; }
+  .popup h3 { font-size: 26px; margin-bottom: 4px; }
+  .popup .role { color: var(--accent); font-size: 14px; margin-bottom: 20px; }
+  .popup .note {
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.8;
+    font-style: italic;
+  }
+  .popup .emoji { font-size: 42px; margin-bottom: 12px; }
+  .close-btn {
+    margin-top: 26px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #000;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .close-btn:hover { transform: scale(1.06); }
+
+  /* ===== Keep In Touch ===== */
+  .connect { text-align: center; }
+  .connect-quote {
+    color: var(--muted);
+    font-style: italic;
+    font-size: clamp(16px, 2.6vw, 20px);
+    line-height: 1.8;
+    max-width: 640px;
+    margin: 0 auto 46px;
+  }
+  .connect-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .connect-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 30px 22px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  .connect-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255,255,255,0.35);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(0,194,255,0.15);
+  }
+  .connect-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    margin-bottom: 6px;
+    transition: transform 0.35s ease;
+  }
+  .connect-card:hover .connect-icon { transform: scale(1.1) rotate(-6deg); }
+  .connect-label {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--accent);
+  }
+  .connect-value {
+    color: var(--muted);
+    font-size: 14px;
+    word-break: break-all;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    text-align: center;
+    padding: 70px 24px 90px;
+    position: relative;
+    z-index: 1;
+  }
+  footer h2 {
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 800;
+    margin-bottom: 14px;
+    background: linear-gradient(90deg, #9ad9ff, #ff9ecb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* keep emojis full-color, not clipped by gradient text */
+  .emoji-plain {
+    -webkit-text-fill-color: initial;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    color: initial;
+  }
+  footer p { color: var(--muted); }
+  .signature {
+    margin-top: 26px;
+    font-size: 26px;
+    font-family: "Segoe Script", "Brush Script MT", cursive;
+    color: var(--muted);
+  }
+
+  /* Animated bold name */
+  .sign-name {
+    margin-top: 10px;
+    font-size: clamp(30px, 7vw, 64px);
+    font-weight: 900;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    animation: popIn 1s cubic-bezier(0.2,0.9,0.3,1.4) both, floatName 4s ease-in-out 1s infinite;
+  }
+  .sign-name .name-text {
+    background: linear-gradient(90deg, #ffffff, #9ad9ff, #ff9ecb, #00c2ff, #ffffff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite;
+    text-shadow: 0 0 30px rgba(0,194,255,0.15);
+  }
+  .sign-name .dot {
+    display: inline-block;
+    animation: wave 2.2s ease-in-out infinite;
+    transform-origin: 70% 70%;
+  }
+  @keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(14deg); }
+    75% { transform: rotate(-8deg); }
+  }
+
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(0.6) translateY(30px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes floatName {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .sign-underline {
+    height: 3px;
+    width: 0;
+    margin: 14px auto 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    animation: growLine 1.4s ease 0.6s forwards;
+  }
+  @keyframes growLine {
+    from { width: 0; }
+    to { width: 240px; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Floating hearts on load */
+  .heart {
+    position: fixed;
+    bottom: -40px;
+    font-size: 22px;
+    z-index: 2;
+    pointer-events: none;
+    animation: float-up linear forwards;
+    opacity: 0;
+  }
+  @keyframes float-up {
+    0% { opacity: 0; transform: translateY(0) scale(0.6); }
+    10% { opacity: 0.9; }
+    100% { opacity: 0; transform: translateY(-110vh) scale(1.1); }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-layer">
+    <div class="stars"></div>
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+  </div>
+
+  <div class="wrap">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="tag">Signing Off</div>
+      <h1>Today Is My<br />Last Day at NYL</h1>
+      <div class="hero-name">Naveen Kannan S</div>
+      <p>It has been an incredible journey. Grateful, proud, and truly happy to have been part of the New York Life family. Thank you for everything. 💙</p>
+      <div class="scroll-hint">SCROLL DOWN<span>↓</span></div>
+    </header>
+
+    <!-- GRATITUDE MESSAGE -->
+    <section class="reveal">
+      <h2 class="section-title">Happy To Be Part of NYL</h2>
+      <p class="section-sub">A note from the heart.</p>
+      <div class="message-box">
+        Every project, every challenge, and every laugh shared here made me who I am today.
+        I am walking away with countless memories and lifelong friendships.
+        Thank you, <strong>NYL</strong>, for the growth, the trust, and the wonderful people.
+        This isn't a goodbye — it's a <strong>see you again</strong>. 🌟
+      </div>
+    </section>
+
+    <!-- TEAM CARDS -->
+    <section class="reveal">
+      <h2 class="section-title">Special Mentions 💫</h2>
+      <p class="section-sub">To each and every resource who made this journey unforgettable — tap on a name card to read a little note from me.</p>
+      <div class="grid" id="cardGrid"></div>
+    </section>
+  </div>
+
+  <!-- KEEP IN TOUCH -->
+  <section class="reveal connect">
+    <h2 class="section-title">Let's Keep In Touch 🤝</h2>
+    <p class="connect-quote">"Distance means so little when someone means so much.<br />This is not the end — our paths will cross again."</p>
+    <div class="connect-grid">
+      <a class="connect-card" href="tel:+918838861261">
+        <div class="connect-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </div>
+        <div class="connect-label">Call Me</div>
+        <div class="connect-value">+91 88388 61261</div>
+      </a>
+
+      <a class="connect-card" href="mailto:naveenkannanofficial@gmail.com">
+        <div class="connect-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-10 6L2 7"/>
+          </svg>
+        </div>
+        <div class="connect-label">Email Me</div>
+        <div class="connect-value">naveenkannanofficial@gmail.com</div>
+      </a>
+
+      <a class="connect-card" href="https://www.linkedin.com/in/naveen-kannan-s-915786235" target="_blank" rel="noopener">
+        <div class="connect-icon">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </div>
+        <div class="connect-label">Connect on LinkedIn</div>
+        <div class="connect-value">in/naveen-kannan-s</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="reveal">
+    <h2>With Gratitude &amp; A Big Smile <span class="emoji-plain">😊</span></h2>
+    <p>Keep shining, team. The best is yet to come.</p>
+    <div class="signature">— Signing off with love</div>
+    <div class="sign-name"><span class="name-text">Naveen Kannan S</span><span class="dot">😊</span></div>
+    <div class="sign-underline"></div>
+  </footer>
+
+  <!-- POPUP -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <div class="emoji" id="popEmoji">🎉</div>
+      <div class="avatar" id="popAvatar">A</div>
+      <h3 id="popName">Name</h3>
+      <div class="role" id="popRole">Role</div>
+      <p class="note" id="popNote">Note</p>
+      <button class="close-btn" id="closeBtn">Close 💙</button>
+    </div>
+  </div>
+
+<script>
+  /* =========================================================
+     EDIT YOUR TEAM HERE — add / remove people freely.
+     name  : person's name
+     role  : their role / how you know them
+     emoji : fun emoji shown in the popup
+     note  : the personal message that will make them smile
+  ========================================================= */
+  const team = [
+    { name: "Alex", role: "The Mentor", emoji: "🧠", note: "You taught me more than any manual ever could. Thank you for your patience and wisdom!" },
+    { name: "Priya", role: "The Problem Solver", emoji: "💡", note: "No bug stood a chance around you. Working beside you was pure inspiration!" },
+    { name: "Sam", role: "The Motivator", emoji: "🔥", note: "Your energy lit up every Monday. Thanks for keeping the whole team smiling!" },
+    { name: "Maria", role: "The Rock", emoji: "🛡️", note: "Calm under any pressure. You made hard days feel easy. Forever grateful!" },
+    { name: "John", role: "The Idea Machine", emoji: "🚀", note: "Every brainstorm with you turned into magic. Keep dreaming big!" },
+    { name: "Lena", role: "The Sunshine", emoji: "🌞", note: "Your kindness made this office feel like home. Thank you for every smile!" },
+    { name: "David", role: "The Wizard", emoji: "🪄", note: "You made the impossible look effortless. It was an honor to learn from you!" },
+    { name: "Aisha", role: "The Heart", emoji: "💖", note: "You cared about people first, always. That made all the difference. Thank you!" }
+  ];
+
+  const grid = document.getElementById("cardGrid");
+  team.forEach(person => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="avatar">${person.name.charAt(0)}</div>
+      <h3>${person.name}</h3>
+      <div class="role">${person.role}</div>
+      <div class="tap">Tap to open ✨</div>
+    `;
+    card.addEventListener("click", () => openPopup(person));
+    grid.appendChild(card);
+  });
+
+  const overlay = document.getElementById("overlay");
+  function openPopup(person) {
+    document.getElementById("popEmoji").textContent = person.emoji;
+    document.getElementById("popAvatar").textContent = person.name.charAt(0);
+    document.getElementById("popName").textContent = person.name;
+    document.getElementById("popRole").textContent = person.role;
+    document.getElementById("popNote").textContent = person.note;
+    overlay.classList.add("open");
+    burstHearts();
+  }
+  function closePopup() { overlay.classList.remove("open"); }
+  document.getElementById("closeBtn").addEventListener("click", closePopup);
+  overlay.addEventListener("click", e => { if (e.target === overlay) closePopup(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closePopup(); });
+
+  /* Scroll reveal animations */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add("visible");
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+  /* Staggered zoom-in for cards */
+  const cardObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const i = Array.from(grid.children).indexOf(el);
+        el.style.transitionDelay = (i % 4) * 100 + "ms";
+        el.classList.add("pop");
+        obs.unobserve(el);
       }
-      h1 {
-        font-size: 3rem;
-        color: #111827;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Hello World</h1>
-  </body>
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll(".card").forEach(el => cardObserver.observe(el));
+
+  /* Floating hearts */
+  function burstHearts() {
+    const emojis = ["💙","🎉","✨","😊","💫","🌟"];
+    for (let i = 0; i < 14; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.animationDuration = (3 + Math.random() * 3) + "s";
+      h.style.fontSize = (16 + Math.random() * 22) + "px";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 6000);
+    }
+  }
+  /* Little welcome burst */
+  window.addEventListener("load", () => setTimeout(burstHearts, 600));
+</script>
+</body>
 </html>

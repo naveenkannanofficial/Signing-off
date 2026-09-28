@@ -260,31 +260,33 @@
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 50;
+    overflow-y: auto;
   }
   .overlay.open { opacity: 1; visibility: visible; }
   .popup {
     background: #0c0c0c;
     border: 1px solid var(--border);
     border-radius: 22px;
-    max-width: 440px;
+    max-width: 600px;
     width: 100%;
-    padding: 40px 34px;
+    max-height: calc(100vh - 48px);
+    padding: 28px 34px;
     text-align: center;
     transform: scale(0.85) translateY(20px);
     transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.4);
     box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,92,162,0.15);
   }
   .overlay.open .popup { transform: scale(1) translateY(0); }
-  .popup .avatar { width: 90px; height: 90px; font-size: 34px; margin-bottom: 18px; }
-  .popup h3 { font-size: 26px; margin-bottom: 4px; }
-  .popup .role { color: var(--accent); font-size: 14px; margin-bottom: 20px; }
+  .popup .avatar { width: 72px; height: 72px; font-size: 28px; margin-bottom: 12px; }
+  .popup h3 { font-size: 24px; margin-bottom: 4px; }
+  .popup .role { color: var(--accent); font-size: 14px; margin-bottom: 14px; }
   .popup .note {
     color: var(--text);
-    font-size: 17px;
-    line-height: 1.8;
+    font-size: 15px;
+    line-height: 1.6;
     font-style: italic;
   }
-  .popup .emoji { font-size: 42px; margin-bottom: 12px; }
+  .popup .emoji { font-size: 36px; margin-bottom: 8px; }
   .close-btn {
     margin-top: 26px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -489,11 +491,31 @@
     .card h3 { font-size: 17px; }
     .card .role { font-size: 12px; }
     .card .tap { font-size: 10px; }
-    .popup { padding: 32px 22px; }
-    .popup .note { font-size: 16px; }
     .connect-value { font-size: 13px; }
     footer { padding: 50px 18px 70px; }
     .signature { font-size: 22px; }
+  }
+
+  /* Short screens / small phones — keep popup fully visible */
+  @media (max-width: 480px) {
+    .overlay { padding: 14px; }
+    .popup {
+      padding: 22px 18px;
+      margin: auto;
+    }
+    .popup .avatar { width: 60px; height: 60px; font-size: 24px; margin-bottom: 10px; }
+    .popup .emoji { font-size: 30px; margin-bottom: 6px; }
+    .popup h3 { font-size: 20px; }
+    .popup .role { font-size: 13px; margin-bottom: 10px; }
+    .popup .note { font-size: 14px; line-height: 1.55; }
+    .close-btn { margin-top: 16px; padding: 10px 24px; }
+  }
+  @media (max-height: 560px) {
+    .popup { padding: 18px 22px; }
+    .popup .avatar { width: 52px; height: 52px; font-size: 22px; margin-bottom: 8px; }
+    .popup .emoji { font-size: 26px; margin-bottom: 4px; }
+    .popup .note { font-size: 13.5px; line-height: 1.5; }
+    .close-btn { margin-top: 14px; }
   }
 
   @media (max-width: 360px) {
@@ -614,9 +636,12 @@
     { name: "Venkat", role: "The Architect Who Believed First", emoji: "🏛️", note: "You were the very first to believe in me — from that interview itself, you saw my potential and showed such genuine warmth and gratitude. As an architect, you didn't just design systems, you helped shape my journey by encouraging me every step of the way. Thank you for opening the door and having faith in me from day one! 🙏" },
     { name: "Eric", role: "The Gentleman of Perfect Words", emoji: "🎙️", note: "A Product Owner with a gentle soul and a heart full of gratitude. I'm honestly a fan of the way you speak — every word so perfectly chosen and beautifully pronounced. You made even simple conversations feel classy and inspiring. Thank you for your kindness, your grace, and for being such a wonderful role model. 🌟" },
     { name: "Ayush", role: "My API Partner-in-Crime", emoji: "🤝", note: "So many stories, so many sprints — and we tackled them all together! Working side by side with you on the APIs was an absolute joy. We debugged, we built, we shipped, and we made a great team doing it. Thank you for the awesome collaboration, buddy. It truly would've been great to keep working with you! 💻🚀" },
+    { name: "Karthik", role: "The Data Master", emoji: "🗄️", note: "The person I could always count on whenever anything came up on the database side! No matter how busy you were, you were always right on time to help — never once did you make me wait. Your command over data is truly impressive, and your willingness to jump in and untangle any DB puzzle saved me more times than I can count. Thank you for being so reliable, so knowledgeable, and so generous with your time. A true data master in every sense! 🙏" },
     { name: "Bhavya", role: "The Bug Hunter with Heart", emoji: "🔍", note: "A brilliant tester and an even better friend! Beyond catching every bug, you always had such a warm and genuine connect with me. Our conversations, the smooth handoffs, the shared laughs — it all made work so much more enjoyable. Thank you for keeping our quality high and our spirits higher. I'll miss our connect! 💖" },
     { name: "Vignesh", role: "The Genuine Go-To Senior", emoji: "🧑‍💻", note: "Whenever I needed to understand a tricky piece of code or get a PR approved, you were my go-to person — always approachable, always helpful. Such a genuine and down-to-earth guy! Your guidance made complex things simple and your reviews made me a better developer. Thank you for always being there with patience and a smile. 🙌" },
-    { name: "Arul", role: "A Friend Since Day One", emoji: "🤗", note: "A wonderful tester and one of my earliest friends here — you were with me right from the starting stage of this journey. We grew together, learned together, and shared so many good moments. You're such a genuine friend, and honestly, I'm going to miss you a lot. Thank you for being by my side from the very beginning! 💙" }
+    { name: "Arul", role: "A Friend Since Day One", emoji: "🤗", note: "A wonderful tester and one of my earliest friends here — you were with me right from the starting stage of this journey. We grew together, learned together, and shared so many good moments. You're such a genuine friend, and honestly, I'm going to miss you a lot. Thank you for being by my side from the very beginning! 💙" },
+    { name: "Kasi", role: "The Calm & Composed Senior", emoji: "🌊", note: "A senior I shared such a warm and genuine connect with! What I admired most about you is how calm and composed you always stayed — no matter the pressure, you carried a steady, reassuring presence that made everything feel more manageable. Our conversations were always so easy and grounding. Thank you for your wisdom, your composure, and the wonderful connect we shared. You're the kind of senior everyone hopes to have! 🙏" },
+    { name: "Yatheesh", role: "The Show Stealer Taking the Baton", emoji: "🌟", note: "The one who's stepping in to take over from me on this project — and honestly, I couldn't have asked for a better person to carry it forward! A true show stealer with the talent, energy, and sharp mind to make this role shine even brighter than I ever could. I have complete confidence that the project is in the safest of hands. Watching you take the baton fills me with pride and zero worry. Go steal the show, my friend — this stage is all yours now! Wishing you nothing but success and standing ovations ahead! 🚀👏" }
   ];
 
   const grid = document.getElementById("cardGrid");
